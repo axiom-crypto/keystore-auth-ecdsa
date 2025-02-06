@@ -12,3 +12,9 @@ docs/
 
 # Dotenv file
 .env
+
+# Mac OS files
+**/.DS_Store
+
+.vscode
+.cargo
