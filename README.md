@@ -1,4 +1,4 @@
-# M-of-N DSA Keystore Account Type
+# M-of-N ECDSA Keystore Account Type
 
 This repo implements a keystore account type for use with the Axiom Keystore. Creating a new keystore account type requires implementing a [key data consumer](https://keystore-docs.axiom.xyz/docs/creating-a-keystore-account-type/key-data-consumer) and setting up a [signature prover](https://keystore-docs.axiom.xyz/docs/creating-a-keystore-account-type/signature-prover). We document both below.
 
@@ -14,9 +14,9 @@ where
 
 - `keyData` is expected to be of the form `abi.encodePacked(bytes1(0x00), abi.encode(ecdsaConsumerCodehash, requiredSigners, allowedSignersList))`.
     - `0x00` is a domain separator.
-    - `ecdsaConsumerCodehash` is the creation codehash of the `ECDSAConsumer` contract.
-    - `requiredSigners` is the number of signers required to sign the user operation for execution.
-    - `allowedSignersList` is the list of allowed signers.
+    - `bytes32 ecdsaConsumerCodehash` is the creation codehash of the `ECDSAConsumer` contract.
+    - `uint256 requiredSigners` is the number of signers required to sign the user operation for execution.
+    - `address[] allowedSignersList` is the list of allowed signers.
 - `authData` is expected to be a concatenated list of signatures where a signature `(uint256 r, uint256 s, uint8 v)` is encoded as the 65-byte payload `abi.encodePacked(r, s, v)`.
 - `userOpHash` is a commitment to the user operation that is being executed and the value that signers should be signing.
 
