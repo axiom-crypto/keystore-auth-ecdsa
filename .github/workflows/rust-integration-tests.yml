@@ -5,14 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "crates/**"
-  pull_request:
-    paths:
-      - "crates/**"
       - ".github/**"
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
-  cancel-in-progress: true
 
 env:
   FOUNDRY_PROFILE: ci
@@ -21,7 +14,7 @@ jobs:
   build:
     runs-on:
       - runs-on=${{ github.run_id }}
-      - runner=64cpu-linux-x64
+      - runner=64cpu-linux-arm64
 
     env:
       CARGO_NET_GIT_FETCH_WITH_CLI: "true"
@@ -65,4 +58,4 @@ jobs:
         working-directory: crates
         run: |
           rustup component add rust-src --toolchain nightly-2024-10-30
-          RUST_MIN_STACK=8388608 cargo t test_final_proof_values --release -- --ignored
+          RUST_BACKTRACE=1 RUST_MIN_STACK=8388608 cargo t test_final_proof_values --release -- --ignored
