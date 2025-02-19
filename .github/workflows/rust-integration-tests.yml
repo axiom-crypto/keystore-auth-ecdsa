@@ -1,0 +1,68 @@
+name: Rust integration tests
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "crates/**"
+  pull_request:
+    paths:
+      - "crates/**"
+      - ".github/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+env:
+  FOUNDRY_PROFILE: ci
+
+jobs:
+  build:
+    runs-on:
+      - runs-on=${{ github.run_id }}
+      - runner=64cpu-linux-x64
+
+    env:
+      CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@nightly
+      
+      # Install Foundry
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+      
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "crates"
+          cache-on-failure: true
+      
+      - name: Checkout openvm (for scripts)
+        run: |
+          git clone https://github.com/openvm-org/openvm.git
+
+      - name: Install architecture specific tools
+        run: |
+          rustup install nightly-2024-10-30
+          source openvm/ci/scripts/utils.sh
+          install_s5cmd
+
+      # `generate_snark_verifier_contract` currently requires `params` to be in the nearest manifest dir
+      - name: Setup halo2
+        run: |
+          bash openvm/extensions/native/recursion/trusted_setup_s3.sh
+          mkdir -p ~/.openvm
+          mv params ~/.openvm/
+          export PARAMS_DIR=~/.openvm/params
+          echo "${PARAMS_DIR}"
+
+      - name: Run tests
+        working-directory: crates
+        run: |
+          rustup component add rust-src --toolchain nightly-2024-10-30
+          RUST_MIN_STACK=8388608 cargo t test_final_proof_values --release -- --ignored
