@@ -2,9 +2,10 @@ name: Rust unit tests
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "shayanh/fix-ci"]
     paths:
       - "crates/**"
+      - ".github/**"
   pull_request:
     paths:
       - "crates/**"
@@ -26,6 +27,8 @@ jobs:
       CARGO_NET_GIT_FETCH_WITH_CLI: "true"
     steps:
       - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@nightly
       
       # Install Foundry
       - name: Install Foundry
@@ -38,8 +41,13 @@ jobs:
         with:
           workspaces: "crates"
           cache-on-failure: true
+      
+      - name: Install architecture specific tools
+        run: |
+          rustup install nightly-2024-10-30
 
       - name: Run tests
         working-directory: crates
         run: |
+          rustup component add rust-src --toolchain nightly-2024-10-30
           cargo t --workspace
