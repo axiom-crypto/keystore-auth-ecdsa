@@ -1,0 +1,6 @@
+**/target
+**/openvm
+*.env
+**/.DS_Store
+params/
+.vscode

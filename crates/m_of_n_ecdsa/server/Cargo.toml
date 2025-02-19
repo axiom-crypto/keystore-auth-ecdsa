@@ -1,0 +1,86 @@
+[package]
+name = "m-of-n-ecdsa-server"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+debug = "line-tables-only"
+strip = true
+panic = "unwind"
+codegen-units = 16
+
+[profile.profiling]
+inherits = "release"
+debug = 2
+strip = false
+
+# Make sure debug symbols are in the bench profile for flamegraphs
+[profile.bench]
+inherits = "profiling"
+
+[profile.test]
+inherits = "release"
+
+[[example]]
+name = "send_tx"
+path = "examples/send_tx.rs"
+required-features = ["test-utils"]
+
+[dependencies]
+m-of-n-ecdsa-guest = { workspace = true }
+signature-prover-lib = { workspace = true }
+signature-prover-server = { workspace = true }
+signature-prover-guest = { workspace = true }
+
+openvm-sdk = { workspace = true }
+openvm-circuit = { workspace = true }
+openvm-benchmarks = { workspace = true }
+openvm-build = { workspace = true }
+openvm-algebra-circuit = { workspace = true }
+openvm-ecc-circuit = { workspace = true }
+openvm-ecc-guest = { workspace = true }
+openvm-keccak256-guest = { workspace = true }
+openvm-native-compiler = { workspace = true }
+openvm-native-recursion = { workspace = true }
+openvm-stark-sdk = { workspace = true }
+snark-verifier-sdk = { workspace = true, features = [
+    "loader_halo2",
+    "halo2-axiom",
+    "display",
+] }
+halo2-axiom = { workspace = true }
+
+alloy-primitives = { workspace = true, features = ["serde", "getrandom"] }
+alloy-rlp = { workspace = true }
+alloy-signer = { workspace = true }
+alloy-signer-local = { workspace = true }
+alloy-sol-types = { workspace = true }
+
+k256 = { workspace = true, features = ["ecdsa-core", "ecdsa"] }
+secp256k1 = { workspace = true, features = ["recovery"] }
+
+rand = { workspace = true }
+hex = { workspace = true }
+hex-literal = { workspace = true }
+derive_more = { workspace = true, features = ["from"] }
+
+serde = { workspace = true, features = ["alloc", "derive"] }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+eyre = { workspace = true }
+clap = { workspace = true }
+tokio = { workspace = true }
+lazy_static = { workspace = true }
+once_cell = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+signature-prover-lib = { workspace = true, features = ["test-utils"] }
+dirs = { workspace = true }
+jsonrpsee = { workspace = true, features = ["full"] }
+
+[features]
+default = []
+test-utils = []

@@ -1,0 +1,74 @@
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.84"
+exclude = [".github/"]
+
+[workspace]
+members = ["m_of_n_ecdsa/guest/", "m_of_n_ecdsa/server/"]
+
+# Explicitly set the resolver to version 2, which is the default for packages with edition >= 2021
+# https://doc.rust-lang.org/edition-guide/rust-2021/default-cargo-resolver.html
+resolver = "2"
+
+[workspace.dependencies]
+
+m-of-n-ecdsa-guest = { path = "m_of_n_ecdsa/guest" }
+m-of-n-ecdsa-server = { path = "m_of_n_ecdsa/server" }
+
+signature-prover-guest = { git = "ssh://git@github.com/axiom-crypto/keystore-periphery.git" }
+signature-prover-lib = { git = "ssh://git@github.com/axiom-crypto/keystore-periphery.git" }
+signature-prover-server = { git = "ssh://git@github.com/axiom-crypto/keystore-periphery.git" }
+
+openvm = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1", features = [
+    "std",
+] }
+openvm-platform = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-ecc-guest = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-ecc-sw-macros = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-algebra-guest = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-algebra-moduli-macros = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+
+openvm-sdk = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-circuit = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-benchmarks = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-build = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-algebra-circuit = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-ecc-circuit = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-keccak256-guest = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-native-compiler = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-native-recursion = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1" }
+openvm-stark-sdk = { git = "https://github.com/openvm-org/stark-backend.git", tag = "v1.0.0-rc.0" }
+snark-verifier-sdk = { git = "https://github.com/axiom-crypto/snark-verifier", branch = "zkvm-v0.1", default-features = false }
+
+halo2-axiom = "0.4.4"
+
+k256 = { version = "0.13.4", default-features = false }
+secp256k1 = { version = "0.30.0", default-features = false }
+
+serde = { version = "1.0.216", default-features = false }
+serde_json = { version = "1.0.134" }
+
+alloy-sol-types = { version = "0.8.7", default-features = false }
+alloy-primitives = { version = "0.8.7", default-features = false }
+alloy-rlp = { version = "0.3.11", default-features = false }
+alloy-signer = { version = "0.11.1", default-features = false }
+alloy-signer-local = "0.11.1"
+
+revm-precompile = { git = "https://github.com/axiom-crypto/revm", branch = "v43-openvm-v1.0.0-rc.1", default-features = false }
+
+rand = { version = "0.8.5" }
+hex = "0.4.3"
+hex-literal = { version = "0.4.1" }
+derive_more = { version = "1.0.0", default-features = false }
+
+tracing = { version = "0.1.41" }
+eyre = { version = "0.6.12" }
+clap = "4.5.23"
+tokio = { version = "1.29.1", default-features = false }
+lazy_static = "1.5.0"
+once_cell = "1.20.2"
+thiserror = { version = "2.0.11", default-features = false }
+dirs = "6.0.0"
+
+jsonrpsee = { version = "0.24.7", default-features = false }
