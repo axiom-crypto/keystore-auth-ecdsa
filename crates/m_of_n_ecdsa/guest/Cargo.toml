@@ -1,0 +1,23 @@
+[package]
+name = "m-of-n-ecdsa-guest"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+signature-prover-guest = { workspace = true }
+
+openvm = { workspace = true, features = ["std"] }
+openvm-platform = { workspace = true }
+openvm-ecc-guest = { workspace = true, features = ["k256"] }
+openvm-ecc-sw-macros = { workspace = true }
+openvm-algebra-guest = { workspace = true }
+openvm-algebra-moduli-macros = { workspace = true }
+
+k256 = { workspace = true, features = ["ecdsa-core"] }
+serde = { workspace = true, features = ["alloc", "derive"] }
+alloy-sol-types = { workspace = true }
+alloy-primitives = { workspace = true, features = ["k256"] }
+revm-precompile = { workspace = true, features = ["openvm-k256"] }
+
+[features]
+default = []
