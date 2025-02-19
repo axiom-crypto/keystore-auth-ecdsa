@@ -5,6 +5,7 @@ on:
     branches: ["main", "shayanh/fix-ci"]
     paths:
       - "crates/**"
+      - ".github/**"
   pull_request:
     paths:
       - "crates/**"
