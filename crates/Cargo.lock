@@ -5650,7 +5650,7 @@ dependencies = [
 [[package]]
 name = "signature-prover-guest"
 version = "0.1.0"
-source = "git+https://github.com/axiom-crypto/keystore-periphery.git#e3279e8b9ae1d0d43db993c9f4d6d6613faa1962"
+source = "git+https://github.com/axiom-crypto/keystore-periphery.git?tag=v0.1#7b5fe2f52606ab9a1f52650160a2468c18f7cd10"
 dependencies = [
  "alloy-primitives",
  "openvm",
@@ -5665,7 +5665,7 @@ dependencies = [
 [[package]]
 name = "signature-prover-lib"
 version = "0.1.0"
-source = "git+https://github.com/axiom-crypto/keystore-periphery.git#e3279e8b9ae1d0d43db993c9f4d6d6613faa1962"
+source = "git+https://github.com/axiom-crypto/keystore-periphery.git?tag=v0.1#7b5fe2f52606ab9a1f52650160a2468c18f7cd10"
 dependencies = [
  "alloy-primitives",
  "bitcode",
@@ -5698,7 +5698,7 @@ dependencies = [
 [[package]]
 name = "signature-prover-server"
 version = "0.1.0"
-source = "git+https://github.com/axiom-crypto/keystore-periphery.git#e3279e8b9ae1d0d43db993c9f4d6d6613faa1962"
+source = "git+https://github.com/axiom-crypto/keystore-periphery.git?tag=v0.1#7b5fe2f52606ab9a1f52650160a2468c18f7cd10"
 dependencies = [
  "alloy-dyn-abi",
  "alloy-primitives",
