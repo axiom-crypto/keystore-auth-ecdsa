@@ -2,10 +2,9 @@ name: Rust integration tests
 
 on:
   push:
-    branches: ["main", "shayanh/integration-tests"]
+    branches: ["main"]
     paths:
       - "crates/**"
-      - ".github/**"
 
 env:
   FOUNDRY_PROFILE: ci
