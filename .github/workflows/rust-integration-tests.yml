@@ -29,6 +29,10 @@ jobs:
         with:
           version: nightly
       
+      - name: Install solc-select and solc
+        run: |
+          cargo install --version 0.5.7 svm-rs && svm install 0.8.19 && solc --version
+ 
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
