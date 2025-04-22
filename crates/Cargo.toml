@@ -16,9 +16,9 @@ resolver = "2"
 m-of-n-ecdsa-guest = { path = "m_of_n_ecdsa/guest" }
 m-of-n-ecdsa-server = { path = "m_of_n_ecdsa/server" }
 
-signature-prover-guest = { git = "https://github.com/axiom-crypto/keystore-periphery.git", rev = "080fc57aa1f2bef4867c3d0cda2aea48eb757ec8" }
-signature-prover-lib = { git = "https://github.com/axiom-crypto/keystore-periphery.git", rev = "080fc57aa1f2bef4867c3d0cda2aea48eb757ec8" }
-signature-prover-server = { git = "https://github.com/axiom-crypto/keystore-periphery.git", rev = "080fc57aa1f2bef4867c3d0cda2aea48eb757ec8" }
+signature-prover-guest = { git = "https://github.com/axiom-crypto/keystore-periphery.git", tag = "v0.1.1" }
+signature-prover-lib = { git = "https://github.com/axiom-crypto/keystore-periphery.git", tag = "v0.1.1" }
+signature-prover-server = { git = "https://github.com/axiom-crypto/keystore-periphery.git", tag = "v0.1.1" }
 
 openvm = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.0.0-rc.1", features = [
     "std",
