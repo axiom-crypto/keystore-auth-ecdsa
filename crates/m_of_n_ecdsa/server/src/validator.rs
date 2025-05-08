@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 
-use alloy_primitives::{Address, PrimitiveSignature};
+use alloy_primitives::{Address, Signature};
 use m_of_n_ecdsa_guest::MOfNEcdsaInput;
 use signature_prover_server::validator::SignatureProverInputValidator;
 
@@ -36,7 +36,7 @@ impl SignatureProverInputValidator for MOfNEcdsaValidator {
 
         let mut signature_eoa_set: BTreeSet<Address> = BTreeSet::new();
         for sig in input.auth_data.signatures {
-            let sig = PrimitiveSignature::try_from(sig.0.as_ref())
+            let sig = Signature::try_from(sig.0.as_ref())
                 .map_err(|_| MOfNEcdsaValidationError::InvalidSignature)?;
 
             let recovered_addr = sig

@@ -25,7 +25,7 @@ impl AuthInputsDecoder for MOfNEcdsaInputDecoder {
         msg_hash: B256,
     ) -> Result<Self::ServerAuthInput, Self::Error> {
         let (codehash, m, signers_list) =
-            <(B256, U256, Vec<Address>)>::abi_decode_params(&auth_inputs.key_data[1..], true)
+            <(B256, U256, Vec<Address>)>::abi_decode_params(&auth_inputs.key_data[1..])
                 .map_err(|err| MOfNEcdsaInputDecodeError::DataDecodeFailed(err.into()))?;
 
         let mut signatures = Vec::new();
