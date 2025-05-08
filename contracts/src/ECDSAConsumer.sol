@@ -2,10 +2,13 @@
 pragma solidity 0.8.26;
 
 import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import { MessageHashUtils } from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 
 import { IKeyDataConsumer } from "./IKeyDataConsumer.sol";
 
 contract ECDSAConsumer is IKeyDataConsumer {
+    using MessageHashUtils for bytes32;
+
     struct ECDSAKeyData {
         bytes32 codehash;
         uint256 requiredSigners;
@@ -31,6 +34,11 @@ contract ECDSAConsumer is IKeyDataConsumer {
 
         // We assume that there are NO duplicate addresses in this list
         address[] calldata allowedSignersList = _keyData.allowedSignersList;
+        uint256 signersListLength = allowedSignersList.length;
+        if (signersListLength > 256) revert InvalidSignersLength();
+
+        userOpHash = userOpHash.toEthSignedMessageHash();
+
         for (uint256 j = 0; j != signatureCount; ++j) {
             bytes calldata _signature = walletSignatures[j * 65:(j + 1) * 65];
 
@@ -41,9 +49,6 @@ contract ECDSAConsumer is IKeyDataConsumer {
                 signer = ECDSA.recover(userOpHash, v, r, s);
             }
 
-            uint256 signersListLength = allowedSignersList.length;
-            if (signersListLength > 256) revert InvalidSignersLength();
-
             uint256 bitmap;
             for (uint256 k = 0; k != signersListLength; ++k) {
                 if (allowedSignersList[k] != signer) continue;
@@ -52,7 +57,6 @@ contract ECDSAConsumer is IKeyDataConsumer {
                     bitmap = set(bitmap, k);
                     ++validSignatures;
                 }
-                // TODO: Check for actual m-of-n. Which loop does this break out of?
                 break;
             }
         }
