@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
+import { MessageHashUtils } from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
+
 import { Test, console } from "forge-std/Test.sol";
 
 import { ECDSAConsumer } from "../src/ECDSAConsumer.sol";
+
+using MessageHashUtils for bytes32;
 
 contract ECDSAConsumerTest is Test {
     ECDSAConsumer public consumer;
@@ -29,7 +33,7 @@ contract ECDSAConsumerTest is Test {
 
         bytes32 msgHash = keccak256("msgHash");
 
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(privKey1, msgHash);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(privKey1, msgHash.toEthSignedMessageHash());
 
         bytes memory signature = abi.encodePacked(r, s, v);
 
