@@ -1,0 +1,73 @@
+name: "Signature prover: Build Docker Image and upload to ECR"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - crates/**
+    tags:
+      - "*"
+
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version"
+        required: false
+      ref:
+        description: "Branch or tag ref. Defaults to workflow ref"
+        required: false
+        type: string
+env:
+  ECR_URI: ${{ secrets.ECR_URI }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  
+jobs:
+  build:
+    runs-on:
+      - runs-on=${{ github.run_id }}
+      - runner=16cpu-linux-x64
+
+    steps:
+      - run: Output workflow input ${{tojson(inputs)}}
+        shell: cat {0}
+
+      - name: Checkout current repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Build and push docker image
+        id: step_build
+        run: |
+          GIT_COMMIT_SHA=$(git rev-parse HEAD)
+          ECR_REPO="signature-prover"
+          FULL_ECR_PATH="${{ env.ECR_URI }}/$ECR_REPO"
+          IMAGE_TAG=$GIT_COMMIT_SHA
+          FULL_IMAGE_TAG="$FULL_ECR_PATH:$IMAGE_TAG"
+
+          set +e
+          aws ecr describe-images --region ${{ env.AWS_REGION }} --repository-name=$ECR_REPO --image-ids=imageTag=$IMAGE_TAG
+          exit_code=$?
+          set -e
+
+          VERSION=${{ inputs.version || (github.ref_type == 'tag' && github.ref_name) }}
+
+          if [ $exit_code -eq 0 ]; then
+            echo "Image ${IMAGE_TAG} already exists, skipping build"
+            if [ -z "$VERSION" ]; then
+              exit 0
+            else 
+              aws ecr get-login-password --region ${{ env.AWS_REGION }}| docker login --username AWS --password-stdin ${{ env.ECR_URI }}
+              docker pull ${FULL_IMAGE_TAG}
+            fi
+          else
+            docker build --tag $FULL_IMAGE_TAG .
+            aws ecr get-login-password --region ${{ env.AWS_REGION }}| docker login --username AWS --password-stdin ${{ env.ECR_URI }}
+            docker push $FULL_IMAGE_TAG
+          fi
+
+          if [ -n "$VERSION" ]; then
+            FULL_VERSION_IMAGE_TAG=$FULL_ECR_PATH:$VERSION
+            docker tag $FULL_IMAGE_TAG $FULL_VERSION_IMAGE_TAG
+            docker push $FULL_VERSION_IMAGE_TAG
+          fi
