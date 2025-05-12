@@ -2,9 +2,10 @@ name: "Signature prover: Build Docker Image and upload to ECR"
 
 on:
   push:
-    branches: [main]
+    branches: [main, jf/build_ci]
     paths:
       - crates/**
+      - "**"
     tags:
       - "*"
 
