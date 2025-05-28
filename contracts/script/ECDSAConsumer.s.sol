@@ -21,8 +21,6 @@ contract ECDSAConsumerScript is Script {
 
     string internal mnemonic;
 
-    string configPath = "./deployment-config/ECDSAConsumer.json";
-
     modifier broadcast() {
         vm.startBroadcast(broadcaster);
         _;
@@ -39,13 +37,7 @@ contract ECDSAConsumerScript is Script {
         }
     }
 
-    function run() external broadcast {
-        string memory config = vm.readFile(configPath);
-
-        IKeystoreValidator validator = IKeystoreValidator(config.readAddress(".keystoreValidator"));
-        validator.deployAndRegisterKeyDataConsumer(type(ECDSAConsumer).creationCode);
-
-        console.log("Consumer creation codehash");
-        console2.logBytes32(keccak256(type(ECDSAConsumer).creationCode));
+    function run() external broadcast returns (ECDSAConsumer consumer) {
+        consumer = new ECDSAConsumer();
     }
 }
